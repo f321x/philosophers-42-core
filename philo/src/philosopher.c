@@ -3,27 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   philosopher.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <***REMOVED***@student.***REMOVED***.de    +#+  +:+       +#+        */
+/*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 09:07:33 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/06 12:12:51 by codespace        ###   ########.fr       */
+/*   Updated: 2023/12/06 14:31:27 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static void	sleeping(philo_data_t *philo_data)
+static void	sleeping(t_philo_data *philo_data)
 {
-	safe_print("is sleeping", philo_data->number, get_time() - philo_data->start_time, philo_data->print_mutex);
+	safe_print("is sleeping", philo_data->number,
+		get_time() - philo_data->start, philo_data->prt_lck);
 	if (philo_data->alive)
 		usleep(philo_data->time_to_sleep * 1000);
 	if (philo_data->alive)
-		safe_print("is thinking", philo_data->number, get_time() - philo_data->start_time, philo_data->print_mutex);
+		safe_print("is thinking", philo_data->number,
+			get_time() - philo_data->start, philo_data->prt_lck);
 }
 
-static void calculate_forks(philo_data_t *data, unsigned int *forks)
+static void	calculate_forks(t_philo_data *data, unsigned int *forks)
 {
-	if ((get_time() - data->last_meal_ts) < data->time_to_die / 2)
+	if ((get_time() - data->lm_ts) < data->time_to_die / 2)
 		usleep(data->time_to_die / 3);
 	if (data->amount % 2)
 	{
@@ -37,14 +39,15 @@ static void calculate_forks(philo_data_t *data, unsigned int *forks)
 	}
 }
 
-static bool	eating(philo_data_t *data)
+static bool	eating(t_philo_data *data)
 {
 	unsigned int	forks[2];
 
 	calculate_forks(data, forks);
 	if (pthread_mutex_lock(&(data->fork_array[forks[0]])))
 		return (false);
-	safe_print("has taken a fork", data->number, get_time() - data->start_time, data->print_mutex);
+	safe_print("has taken a fork", data->number, get_time()
+		- data->start, data->prt_lck);
 	if (!data->alive || pthread_mutex_lock(&(data->fork_array[forks[1]])))
 	{
 		pthread_mutex_unlock(&(data->fork_array[forks[0]]));
@@ -52,11 +55,12 @@ static bool	eating(philo_data_t *data)
 	}
 	if (data->alive)
 	{
-		safe_print("has taken a fork", data->number, get_time() - data->start_time, data->print_mutex);
-		safe_print("is eating", data->number, get_time() - data->start_time, data->print_mutex);
-		data->last_meal_ts = get_time();
+		safe_print("has taken a fork", data->number, get_time()
+			- data->start, data->prt_lck);
+		safe_print("is eating", data->number, get_time()
+			- data->start, data->prt_lck);
+		data->lm_ts = get_time();
 		usleep(data->time_to_eat * 1000);
-		// data->last_meal_ts = get_time();
 	}
 	pthread_mutex_unlock(&(data->fork_array[forks[0]]));
 	pthread_mutex_unlock(&(data->fork_array[forks[1]]));
@@ -65,18 +69,12 @@ static bool	eating(philo_data_t *data)
 
 void	*philo(void *philo_data)
 {
-	philo_data_t	*data;
+	t_philo_data	*data;
 
-	data = (philo_data_t *)philo_data;
-
-	// delaying some time to prevent deadlock
+	data = (t_philo_data *)philo_data;
 	if (data->number % 2)
 		usleep(100);
-
-	// setting last meal to start time
-	data->last_meal_ts = get_time();
-
-	// main loop
+	data->lm_ts = get_time();
 	while (data->alive && data->amount > 1 && data->min_eat_number != 0)
 	{
 		if (!eating(philo_data) || !data->alive)
@@ -87,11 +85,7 @@ void	*philo(void *philo_data)
 			sleeping(data);
 	}
 	if ((data->min_eat_number != 0 && data->first_dead) || data->amount == 1)
-	{
 		data->alive = false;
-		// usleep(2000);
-		// safe_print("died", data->number, get_time() - data->start_time, data->print_mutex);
-	}
 	if (data->min_eat_number == 0)
 		data->eaten_enough = true;
 	return (NULL);

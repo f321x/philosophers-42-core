@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   arg_parsing.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <***REMOVED***@student.***REMOVED***.de    +#+  +:+       +#+        */
+/*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 11:42:56 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/01 11:43:44 by codespace        ###   ########.fr       */
+/*   Updated: 2023/12/06 14:31:56 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-bool	parse_arguments(int argc, char **argv, philos_t *args)
+bool	parse_arguments(int argc, char **argv, t_philos *args)
 {
 	int	index;
 
