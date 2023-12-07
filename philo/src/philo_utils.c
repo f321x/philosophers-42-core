@@ -6,7 +6,7 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:25:26 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/06 14:31:56 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/06 15:09:34 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ bool	monitor(t_philos *phils)
 	unsigned int	eaten;
 	unsigned long	current_time;
 
-	usleep((phils->time_to_die * 1000) / 2);
+	usleep((phils->time_to_die * 1000));
 	while (1)
 	{
 		index = 0;
