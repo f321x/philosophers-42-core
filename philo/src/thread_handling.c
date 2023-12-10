@@ -6,12 +6,21 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 09:11:08 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/10 19:05:13 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/10 20:18:04 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+/**
+ * @brief Allocates threads and mutexes for the philosophers simulation.
+ *
+ * This function allocates memory for an array of pthread_t objects to represent the threads
+ * and an array of pthread_mutex_t objects to represent the forks. It also initializes the mutexes.
+ *
+ * @param args The pointer to the t_philos struct containing the simulation arguments.
+ * @return true if the allocation and initialization is successful, false otherwise.
+ */
 bool	allocate_threads(t_philos *args)
 {
 	unsigned int	index;
@@ -39,6 +48,14 @@ bool	allocate_threads(t_philos *args)
 	return (true);
 }
 
+/**
+ * Creates a philosopher with the given arguments and initializes its data.
+ * Then it stores the philosopher in the array of philosophers in the allocated
+ * heap.
+ * @param args The arguments for creating the philosopher.
+ * @param index The index of the philosopher in the array.
+ * @return Returns true if the philosopher is successfully created, false otherwise.
+ */
 static bool	create_philos(t_philos *args, unsigned int index)
 {
 	t_philo_data	current_philo;
@@ -61,6 +78,16 @@ static bool	create_philos(t_philos *args, unsigned int index)
 	return (true);
 }
 
+/**
+ * @brief Initializes arrays and mutexes for the philosophers simulation.
+ *
+ * This function initializes the array of philosopher data and allocates memory for it.
+ * It also calls the allocate_threads function to create the threads for each philosopher.
+ * Additionally, it initializes a mutex for printing purposes.
+ *
+ * @param args A pointer to the t_philos struct containing the simulation data.
+ * @return true if the initialization is successful, false otherwise.
+ */
 static bool	init_arrays(t_philos *args)
 {
 	args->ph_arr = malloc(sizeof(t_philo_data) * args->amount);
@@ -80,6 +107,12 @@ static bool	init_arrays(t_philos *args)
 	return (true);
 }
 
+/**
+ * Spawns philosophers (allocates & initializes) and starts their threads.
+ *
+ * @param args The pointer to the t_philos struct containing the necessary arguments.
+ * @return Returns true if the philosophers were successfully spawned and monitored, false otherwise.
+ */
 bool	spawn_philosophers(t_philos *args)
 {
 	unsigned int	index;

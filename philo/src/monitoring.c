@@ -6,12 +6,18 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/10 18:41:13 by ***REMOVED***             #+#    #+#             */
-/*   Updated: 2023/12/10 19:09:34 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/10 20:28:22 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+// Checks the condition for a philosopher's liveliness.
+//
+// @param phils The struct containing the philosophers' information.
+// @param index The index of the philosopher to check.
+// @return true if the philosopher is alive and
+// meets the condition, false otherwise.
 static bool	philo_condition(t_philos *phils, unsigned int index)
 {
 	unsigned long	current_time;
@@ -29,6 +35,16 @@ static bool	philo_condition(t_philos *phils, unsigned int index)
 	return (true);
 }
 
+/**
+ * @brief Checks the condition of each philosopher in the array.
+ *
+ * This function iterates through the philosophers array and checks the condition of each philosopher.
+ * If a philosopher's condition is not met, it prints a death message, updates the philosopher's state,
+ * and returns false. Otherwise, it continues to the next philosopher.
+ *
+ * @param phils The philosophers struct containing the array of philosophers.
+ * @return true if all philosophers' conditions are met, false otherwise.
+ */
 static bool	check_philos(t_philos *phils)
 {
 	unsigned int	index;
@@ -53,9 +69,17 @@ static bool	check_philos(t_philos *phils)
 	return (true);
 }
 
-static void	kill_all_philosophers(t_philos *phils)
+/**
+ * @brief Kills all philosophers in the given array.
+ *
+ * This function sets the 'alive' flag of each philosopher in the array to false,
+ * indicating that they should stop their execution.
+ *
+ * @param phils The structure containing the array of philosophers.
+ */
+static void kill_all_philosophers(t_philos *phils)
 {
-	unsigned int	index;
+	unsigned int index;
 
 	index = 0;
 	while (index < phils->amount)
@@ -67,6 +91,15 @@ static void	kill_all_philosophers(t_philos *phils)
 	}
 }
 
+/**
+ * Monitors the state of the philosophers.
+ *
+ * This function checks the state of the philosophers and returns true if all
+ * philosophers have finished eating, or if any philosopher has died.
+ * It will always kill every philosopher before returning.
+ * @param phils The structure containing the information about the philosophers.
+ * @return True if all philosophers have finished eating or if any philosopher has died, false otherwise.
+ */
 bool	monitor(t_philos *phils)
 {
 	unsigned int	index;

@@ -6,12 +6,20 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 09:07:33 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/10 18:48:06 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/10 20:12:33 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+/**
+ * @brief Function to simulate the philosopher sleeping.
+ *
+ * This function is responsible for simulating the philosopher sleeping.
+ * Will first sleep and then start thinking if the philosopher is still alive.
+ *
+ * @param philo_data Pointer to the `t_philo_data` structure.
+ */
 static void	sleeping(t_philo_data *philo_data)
 {
 	safe_print("is sleeping", philo_data->number,
@@ -23,6 +31,17 @@ static void	sleeping(t_philo_data *philo_data)
 			get_time() - philo_data->start, philo_data->prt_lck);
 }
 
+/**
+ * @brief Calculates the forks for a philosopher.
+ *
+ * This function calculates the forks for a philosopher.
+ * If the philosopher is odd, the first fork is the one to the left and the second one is the one to the right.
+ * If the philosopher is even, the first fork is the one to the right and the second one is the one to the left.
+ * This is done to prevent deadlocks. There is also a sleep at the beginning of the function to prevent starvation.
+ *
+ * @param data The pointer to the philosopher data.
+ * @param forks The pointer to the array of forks.
+ */
 static void	calculate_forks(t_philo_data *data, unsigned int *forks)
 {
 	if ((get_time() - data->lm_ts) < data->time_to_die / 2)
@@ -39,6 +58,15 @@ static void	calculate_forks(t_philo_data *data, unsigned int *forks)
 	}
 }
 
+/**
+ * @brief Function to simulate the philosopher eating.
+ *
+ * This function is responsible for simulating the philosopher eating process.
+ * It locks the necessary forks, prints the appropriate messages, and updates the philosopher's state.
+ *
+ * @param data The pointer to the philosopher's data structure.
+ * @return true if the philosopher successfully eats, false otherwise.
+ */
 static bool	eating(t_philo_data *data)
 {
 	unsigned int	forks[2];
@@ -67,9 +95,15 @@ static bool	eating(t_philo_data *data)
 	return (true);
 }
 
-void	*philo(void *philo_data)
+/**
+ * @brief The philosopher function that represents the behavior of a philosopher thread.
+ *
+ * @param philo_data A pointer to the philosopher data structure.
+ * @return void* Returns NULL.
+ */
+void *philo(void *philo_data)
 {
-	t_philo_data	*data;
+	t_philo_data *data;
 
 	data = (t_philo_data *)philo_data;
 	if (data->number % 2)
@@ -92,7 +126,7 @@ void	*philo(void *philo_data)
 	}
 	if (data->min_eat_number == 0)
 		data->eaten_enough = true;
-	return (NULL);
+	return NULL;
 }
 
 // ◦timestamp_in_ms X has taken a fork
