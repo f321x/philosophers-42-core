@@ -6,20 +6,11 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:25:26 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/06 15:09:34 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/10 18:47:20 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-unsigned long	get_time(void)
-{
-	struct timeval	time;
-
-	gettimeofday(&time, NULL);
-	return ((((unsigned long)time.tv_sec) * 1000)
-		+ (((unsigned long)time.tv_usec) / 1000));
-}
 
 void	safe_print(const char *string, unsigned int number, unsigned long ts,
 					pthread_mutex_t *print_block)
@@ -29,60 +20,20 @@ void	safe_print(const char *string, unsigned int number, unsigned long ts,
 	pthread_mutex_unlock(print_block);
 }
 
-static bool	check_philos(t_philos *phils)
+bool	check_alive(t_philo_data *philo)
 {
-	unsigned long	current_time;
-	unsigned int	index;
-
-	current_time = get_time();
-	index = 0;
-	while (index < phils->amount)
+	if (!philo->alive_mutex || pthread_mutex_lock(philo->alive_mutex))
+		return (false);
+	if (!(philo->alive))
 	{
-		if (!(phils->ph_arr[index].alive)
-			|| ((((current_time - (phils->ph_arr[index]).lm_ts)
-						> phils->time_to_die)) && (phils->ph_arr[index].lm_ts
-					> 0 && current_time > phils->ph_arr[index].lm_ts)))
-		{
-			if (phils->ph_arr[index].eaten_enough)
-				continue ;
-			safe_print("died", index + 1, get_time()
-				- phils->ph_arr[index].start, phils->ph_arr[index].prt_lck);
-			phils->ph_arr[index].first_dead = true;
-			phils->ph_arr[index].alive = false;
-			return (false);
-		}
-		index++;
+		pthread_mutex_unlock(philo->alive_mutex);
+		return (false);
 	}
-	return (true);
-}
-
-bool	monitor(t_philos *phils)
-{
-	unsigned int	index;
-	unsigned int	eaten;
-	unsigned long	current_time;
-
-	usleep((phils->time_to_die * 1000));
-	while (1)
+	else
 	{
-		index = 0;
-		eaten = 0;
-		while (phils->ph_arr[index].eaten_enough
-			&& phils->amount > index)
-		{
-			index++;
-			eaten++;
-		}
-		if (eaten == phils->amount)
-			break ;
-		current_time = get_time();
-		if (!check_philos(phils))
-			break ;
+		pthread_mutex_unlock(philo->alive_mutex);
+		return (true);
 	}
-	index = 0;
-	while (index < phils->amount)
-		phils->ph_arr[index++].alive = false;
-	return (true);
 }
 
 // bool	start_monitor(t_philos	*all_philos)

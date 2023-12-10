@@ -6,39 +6,11 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 09:11:08 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/06 14:31:56 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/10 19:05:13 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-void	destroy_mutexes(t_philos *args, unsigned int amount)
-{
-	unsigned int	index;
-
-	index = 0;
-	while (index < amount)
-	{
-		pthread_mutex_destroy(&(args->fork_array[index]));
-		index++;
-	}
-	pthread_mutex_destroy(&(args->printing_mutex));
-	free(args->fork_array);
-}
-
-void	kill_threads(t_philos *args, unsigned int amount)
-{
-	unsigned int	index;
-
-	index = 0;
-	while (index < amount)
-	{
-		pthread_detach(args->thread_array[index]);
-		index++;
-	}
-	free(args->ph_arr);
-	free(args->thread_array);
-}
 
 bool	allocate_threads(t_philos *args)
 {
@@ -67,7 +39,7 @@ bool	allocate_threads(t_philos *args)
 	return (true);
 }
 
-static void	create_philos(t_philos *args, unsigned int index)
+static bool	create_philos(t_philos *args, unsigned int index)
 {
 	t_philo_data	current_philo;
 
@@ -83,14 +55,14 @@ static void	create_philos(t_philos *args, unsigned int index)
 	current_philo.eaten_enough = false;
 	current_philo.first_dead = false;
 	current_philo.prt_lck = &(args->printing_mutex);
+	if (!alloc_monitoring_mutexes(&current_philo))
+		return (false);
 	args->ph_arr[index] = current_philo;
+	return (true);
 }
 
-bool	spawn_philosophers(t_philos *args)
+static bool	init_arrays(t_philos *args)
 {
-	unsigned int	index;
-
-	index = 0;
 	args->ph_arr = malloc(sizeof(t_philo_data) * args->amount);
 	if (!allocate_threads(args) || !args->ph_arr)
 	{
@@ -98,14 +70,32 @@ bool	spawn_philosophers(t_philos *args)
 			free(args->ph_arr);
 		return (false);
 	}
-	pthread_mutex_init(&(args->printing_mutex), NULL);
+	if (pthread_mutex_init(&(args->printing_mutex), NULL))
+	{
+		destroy_mutexes(args, args->amount);
+		free(args->ph_arr);
+		free(args->thread_array);
+		return (false);
+	}
+	return (true);
+}
+
+bool	spawn_philosophers(t_philos *args)
+{
+	unsigned int	index;
+
+	if (!init_arrays(args))
+		return (false);
+	index = 0;
 	args->start = get_time();
 	while (index < args->amount)
 	{
-		create_philos(args, index);
-		if (pthread_create(&(args->thread_array[index]), NULL, philo,
+		if (!create_philos(args, index)
+			|| pthread_create(&(args->thread_array[index]), NULL, philo,
 				&(args->ph_arr[index])))
 		{
+			set_philos_dead(args, index);
+			usleep(100);
 			kill_threads(args, index);
 			destroy_mutexes(args, args->amount);
 			return (false);

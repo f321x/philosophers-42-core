@@ -3,21 +3,21 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: codespace <***REMOVED***@student.***REMOVED***.de    +#+  +:+       +#+         #
+#    By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/28 10:54:26 by codespace         #+#    #+#              #
-#    Updated: 2023/12/06 12:38:57 by codespace        ###   ########.fr        #
+#    Updated: 2023/12/10 18:49:41 by ***REMOVED***            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	:= philo
 CC		:= cc
 CFLAGS	:= -Wall -Werror -Wextra
-DFLAGS 	:= -g3
+DFLAGS 	:= -g3 # -fsanitize=thread # -fsanitize=address
 
 HEADERS	:= -I ./includes
 LIBS	:= -lpthread
-SRCS	:= main.c arg_parsing.c philosopher.c thread_handling.c philo_utils.c
+SRCS	:= main.c arg_parsing.c philosopher.c thread_handling.c philo_utils.c time_utils.c monitoring.c thread_utils.c
 
 OBJDIR	:= objs
 SRCDIR	:= src
