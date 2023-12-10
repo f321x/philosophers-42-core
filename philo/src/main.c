@@ -12,6 +12,21 @@
 
 #include "philosophers.h"
 
+static void	wait_for_threads(t_philos *args)
+{
+	unsigned int	index;
+
+	index = 0;
+	while (index < args->amount)
+	{
+		pthread_join(args->thread_array[index], NULL);
+		index++;
+	}
+	destroy_mutexes(args, args->amount);
+	free(args->ph_arr);
+	free(args->thread_array);
+}
+
 int	main(int argc, char **argv)
 {
 	t_philos		args;
@@ -20,12 +35,20 @@ int	main(int argc, char **argv)
 		return (1);
 	if (!spawn_philosophers(&args))
 		return (1);
-	destroy_mutexes(&args, args.amount);
-	free(args.ph_arr);
-	free(args.thread_array);
+	wait_for_threads(&args);
 	return (0);
 }
 
+// void	leak_checker(void)
+// {
+// 	system("leaks philo");
+// }
+
+// kill_threads(&args, args.amount);
+// destroy_mutexes(&args, args.amount);
+
+// free(args.ph_arr);
+// free(args.thread_array);
 // valgrind --tool=hellgrind
 // -g -fsanitize=thread
 // -g3
@@ -34,23 +57,3 @@ int	main(int argc, char **argv)
 // printf("time_to_eat: %lu\n", args.time_to_eat);
 // printf("time_to_sleep: %lu\n", args.time_to_sleep);
 // printf("min_eat_number: %lu\n", args.min_eat_number);
-
-// static void	wait_for_threads(t_philos *args)
-// {
-// 	unsigned int	index;
-
-// 	index = 0;
-// 	while (index < args->amount)
-// 	{
-// 		pthread_join(args->thread_array[index], NULL);
-// 		index++;
-// 	}
-// 	destroy_mutexes(args, args->amount);
-// 	free(args->ph_arr);
-// 	free(args->thread_array);
-// }
-
-// void leak_checker(void)
-// {
-// 	system("leaks philo");
-// }
