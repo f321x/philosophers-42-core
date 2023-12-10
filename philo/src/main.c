@@ -12,6 +12,14 @@
 
 #include "philosophers.h"
 
+// @brief Waits for all threads to finish and frees allocated memory.
+//
+// This function waits for each thread in the thread array to
+// finish using pthread_join.
+// It also destroys the mutexes and frees the memory
+// allocated for the philosophers array and thread array.
+//
+// @param args The pointer to the t_philos struct containing the necessary data.
 static void	wait_for_threads(t_philos *args)
 {
 	unsigned int	index;
@@ -27,6 +35,13 @@ static void	wait_for_threads(t_philos *args)
 	free(args->thread_array);
 }
 
+/**
+ * @brief The main function of the program.
+ *
+ * @param argc The number of command-line arguments.
+ * @param argv An array of strings containing the command-line arguments.
+ * @return The exit status of the program.
+ */
 int	main(int argc, char **argv)
 {
 	t_philos		args;
