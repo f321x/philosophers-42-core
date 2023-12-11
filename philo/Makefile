@@ -6,14 +6,14 @@
 #    By: fbock <fbock@student.42heilbronn.de>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/28 10:54:26 by codespace         #+#    #+#              #
-#    Updated: 2023/12/10 18:49:41 by fbock            ###   ########.fr        #
+#    Updated: 2023/12/11 13:04:54 by fbock            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME	:= philo
 CC		:= cc
 CFLAGS	:= -Wall -Werror -Wextra
-DFLAGS 	:= -g3 # -fsanitize=thread # -fsanitize=address
+DFLAGS 	:= -g3 -fsanitize=thread # -fsanitize=address
 
 HEADERS	:= -I ./includes
 LIBS	:= -lpthread
