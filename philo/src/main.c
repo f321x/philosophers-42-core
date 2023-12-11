@@ -20,20 +20,20 @@
 // allocated for the philosophers array and thread array.
 //
 // @param args The pointer to the t_philos struct containing the necessary data.
-static void	wait_for_threads(t_philos *args)
-{
-	unsigned int	index;
+// static void	wait_for_threads(t_philos *args)
+// {
+// 	unsigned int	index;
 
-	index = 0;
-	while (index < args->amount)
-	{
-		pthread_join(args->thread_array[index], NULL);
-		index++;
-	}
-	destroy_mutexes(args, args->amount);
-	free(args->ph_arr);
-	free(args->thread_array);
-}
+// 	index = 0;
+// 	while (index < args->amount)
+// 	{
+// 		pthread_join(args->thread_array[index], NULL);
+// 		index++;
+// 	}
+// 	destroy_mutexes(args, args->amount);
+// 	free(args->ph_arr);
+// 	free(args->thread_array);
+// }
 
 /**
  * @brief The main function of the program.
@@ -50,7 +50,9 @@ int	main(int argc, char **argv)
 		return (1);
 	if (!spawn_philosophers(&args))
 		return (1);
-	wait_for_threads(&args);
+	destroy_mutexes(&args, args.amount);
+	free(args.ph_arr);
+	free(args.thread_array);
 	return (0);
 }
 

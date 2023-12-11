@@ -6,7 +6,7 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/28 10:49:22 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/10 19:06:24 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/11 13:09:50 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ bool			check_alive(t_philo_data *philo);
 unsigned long	get_time(void);
 unsigned long	read_ts(t_philo_data *philo);
 void			write_ts(t_philo_data *philo);
+void			better_sleep(unsigned long sleep_ms);
 
 // monitoring.c
 bool			monitor(t_philos *all_philos);

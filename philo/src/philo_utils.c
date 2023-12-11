@@ -6,7 +6,7 @@
 /*   By: ***REMOVED*** <***REMOVED***@student.***REMOVED***.de>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/29 13:25:26 by codespace         #+#    #+#             */
-/*   Updated: 2023/12/10 20:09:19 by ***REMOVED***            ###   ########.fr       */
+/*   Updated: 2023/12/11 13:02:46 by ***REMOVED***            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,21 +64,4 @@ bool	check_alive(t_philo_data *philo)
 // 		return (false);
 // 	}
 // 	return (true);
-// }
-
-// void better_sleep(unsigned long sleep_ms)
-// {
-// 	struct timeval	current_time;
-// 	struct timeval	time_start;
-// 	unsigned long	elapsed_us;
-
-// 	sleep_ms *= 1000;
-// 	elapsed_us = 0;
-// 	gettimeofday(&time_start, NULL);
-// 	while (elapsed_us < sleep_ms)
-// 	{
-// 		gettimeofday(&current_time, NULL);
-// 		elapsed_us = (current_time.tv_sec - time_start.tv_sec)
-			// * 1000000L + (current_time.tv_usec - time_start.tv_usec);
-// 	}
 // }
